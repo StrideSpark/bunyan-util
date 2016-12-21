@@ -1,0 +1,20 @@
+{
+  "name": "bunyan-util",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "small helper to share a bunyan child logger throughout an app, includes typescript definitions",
+  "repository": "stridespark/bunyan-util",
+  "author": "stridespark",
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "1.8.5"
+  },
+  "scripts": {
+    "2npm": "tsc --declaration && publish"
+  },
+  "devDependencies": {
+    "@types/bunyan": "0.0.34",
+    "publish": "0.6.0",
+    "typescript": "2.1.4"
+  }
+}
