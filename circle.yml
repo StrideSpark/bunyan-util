@@ -21,6 +21,10 @@ dependencies:
     - ~/.yarn
     - ~/.cache/yarn
 
+test:
+  override:
+    - echo 'no tests'
+
 deployment:
   npm:
     branch: master
