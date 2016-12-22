@@ -1,10 +1,35 @@
 import * as bunyan from 'bunyan';
 
+
 let rootLogger = bunyan.createLogger({
     name: process.env.APP_NAME || "app",
     src: !(process.env.BUNYAN_NO_SRC),
-    serializers: { err: bunyan.stdSerializers.err }
+    serializers: {
+        err: err => Object.assign(err, { stack: getFullErrorStack(err) })
+    }
 });
+
+/*
+ * copied from bunyan
+ * This function dumps long stack traces for exceptions having a cause()
+ * method. The error classes from
+ * [verror](https://github.com/davepacheco/node-verror) and
+ * [restify v2.0](https://github.com/mcavage/node-restify) are examples.
+ *
+ * Based on `dumpException` in
+ * https://github.com/davepacheco/node-extsprintf/blob/master/lib/extsprintf.js
+ */
+function getFullErrorStack(ex: any) {
+    var ret = ex.stack || ex.toString();
+    if (ex.cause && typeof (ex.cause) === 'function') {
+        var cex = ex.cause();
+        if (cex) {
+            ret += '\nCaused by: ' + getFullErrorStack(cex);
+        }
+    }
+    return (ret);
+}
+
 
 let childLog = rootLogger;
 
