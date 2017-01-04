@@ -5,7 +5,13 @@ let rootLogger = bunyan.createLogger({
     name: process.env.APP_NAME || "app",
     src: !(process.env.BUNYAN_NO_SRC),
     serializers: {
-        err: err => Object.assign(err, { stack: getFullErrorStack(err) })
+        err: err => Object.assign({
+            message: err.message,
+            name: err.name,
+            stack: getFullErrorStack(err),
+            code: err.code,
+            signal: err.signal
+        }, err)
     }
 });
 
@@ -19,7 +25,7 @@ let rootLogger = bunyan.createLogger({
  * Based on `dumpException` in
  * https://github.com/davepacheco/node-extsprintf/blob/master/lib/extsprintf.js
  */
-function getFullErrorStack(ex: any) {
+export function getFullErrorStack(ex: any) {
     var ret = ex.stack || ex.toString();
     if (ex.cause && typeof (ex.cause) === 'function') {
         var cex = ex.cause();
