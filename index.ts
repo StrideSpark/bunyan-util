@@ -8,14 +8,14 @@ let rootLogger = bunyan.createLogger({
     level: (process.env.BUNYAN_LEVEL || 'info'),
     serializers: {
         err: err => {
-            const sanitizedErr = { ...err };
-            sanitizeObject(err);
+            const sanitizedErr = JSON.parse(JSON.stringify(err))
+            sanitizeObject(sanitizedErr);
             return Object.assign({
                 message: sanitizedErr.message,
-                name: sanitizedErr["name"],
+                name: sanitizedErr.name,
                 stack: getFullErrorStack(sanitizedErr),
-                code: sanitizedErr["code"],
-                signal: sanitizedErr["signal"]
+                code: sanitizedErr.code,
+                signal: sanitizedErr.signal
             }, sanitizedErr)
         }
     }
