@@ -1,6 +1,6 @@
 import * as bunyan from 'bunyan';
 
-const SANITIZED_KEYS = new Set(['password', 'secret', 'credentials']);
+const SANITIZED_KEYS = ['password', 'secret', 'credentials'];
 
 let rootLogger = bunyan.createLogger({
     name: process.env.APP_NAME || "app",
@@ -8,27 +8,30 @@ let rootLogger = bunyan.createLogger({
     level: (process.env.BUNYAN_LEVEL || 'info'),
     serializers: {
         err: err => {
-            const sanitizedErr = JSON.parse(JSON.stringify(err))
-            sanitizeObject(sanitizedErr);
+            sanitizeObject(err);
             return Object.assign({
-                message: sanitizedErr.message,
-                name: sanitizedErr.name,
-                stack: getFullErrorStack(sanitizedErr),
-                code: sanitizedErr.code,
-                signal: sanitizedErr.signal
-            }, sanitizedErr)
+                message: err.message,
+                name: err.name,
+                stack: getFullErrorStack(err),
+                code: err.code,
+                signal: err.signal
+            }, err)
         }
     }
 });
 
 function sanitizeObject(input: { [key: string]: any }) {
     for (const k of Object.keys(input)) {
-        if (SANITIZED_KEYS.has(k)) {
+        if (containsMatch(k)) {
             input[k] = 'SANITIZED';
         } else if (typeof input[k] !== null && typeof input[k] === 'object') {
             sanitizeObject(input[k]);
         }
     }
+}
+
+function containsMatch(key: string): boolean {
+    return SANITIZED_KEYS.some(target => key.indexOf(target) !== -1);
 }
 
 /*
