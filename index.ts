@@ -7,31 +7,33 @@ let rootLogger = bunyan.createLogger({
     src: !(process.env.BUNYAN_NO_SRC),
     level: (process.env.BUNYAN_LEVEL || 'info'),
     serializers: {
-        err: err => {
-            sanitizeObject(err);
-            return Object.assign({
-                message: err.message,
-                name: err.name,
-                stack: getFullErrorStack(err),
-                code: err.code,
-                signal: err.signal
-            }, err)
-        }
+        err: err => Object.assign({
+            message: err.message,
+            name: err.name,
+            stack: getFullErrorStack(err),
+            code: err.code,
+            signal: err.signal
+        }, sanitizeObject(err))
+
     }
 });
 
-function sanitizeObject(input: { [key: string]: any }) {
+export function sanitizeObject(input: { [key: string]: any }) {
+    const result: { [key: string]: any } = {};
     for (const k of Object.keys(input)) {
         if (containsMatch(k)) {
-            input[k] = 'SANITIZED';
+            result[k] = 'SANITIZED';
         } else if (typeof input[k] !== null && typeof input[k] === 'object') {
-            sanitizeObject(input[k]);
+            result[k] = sanitizeObject(input[k]);
+        } else {
+            result[k] = input[k];
         }
     }
+    return result;
 }
 
 function containsMatch(key: string): boolean {
-    return SANITIZED_KEYS.some(target => key.indexOf(target) !== -1);
+    return SANITIZED_KEYS.some(target => key.toLowerCase().indexOf(target) !== -1);
 }
 
 /*
