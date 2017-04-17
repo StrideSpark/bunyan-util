@@ -1,5 +1,6 @@
 import * as bunyan from 'bunyan';
 
+const SANITIZED_KEYS = ['password', 'secret', 'credentials'];
 
 let rootLogger = bunyan.createLogger({
     name: process.env.APP_NAME || "app",
@@ -12,9 +13,28 @@ let rootLogger = bunyan.createLogger({
             stack: getFullErrorStack(err),
             code: err.code,
             signal: err.signal
-        }, err)
+        }, sanitizeObject(err))
+
     }
 });
+
+export function sanitizeObject(input: { [key: string]: any }) {
+    const result: { [key: string]: any } = {};
+    for (const k of Object.keys(input)) {
+        if (containsMatch(k)) {
+            result[k] = 'SANITIZED';
+        } else if (typeof input[k] !== null && typeof input[k] === 'object') {
+            result[k] = sanitizeObject(input[k]);
+        } else {
+            result[k] = input[k];
+        }
+    }
+    return result;
+}
+
+function containsMatch(key: string): boolean {
+    return SANITIZED_KEYS.some(target => key.toLowerCase().indexOf(target) !== -1);
+}
 
 /*
  * copied from bunyan
