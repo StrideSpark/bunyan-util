@@ -1,6 +1,6 @@
 {
   "name": "bunyan-util",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "main": "index.js",
   "description": "small helper to share a bunyan child logger throughout an app, includes typescript definitions",
   "repository": "stridespark/bunyan-util",
