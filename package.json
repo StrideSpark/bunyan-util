@@ -7,8 +7,8 @@
   "author": "stridespark",
   "license": "MIT",
   "dependencies": {
-    "bunyan": "1.8.5",
-    "@types/bunyan": "0.0.34"
+    "@types/bunyan": "^1.8.0",
+    "bunyan": "^1.8.10"
   },
   "scripts": {
     "2npm": "tsc --declaration && publish"

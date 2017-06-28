@@ -1,7 +1,7 @@
-import * as bunyan from 'bunyan';
+import * as Logger from 'bunyan';
 
 
-let rootLogger = bunyan.createLogger({
+let rootLogger = Logger.createLogger({
     name: process.env.APP_NAME || "app",
     src: !(process.env.BUNYAN_NO_SRC),
     level: (process.env.BUNYAN_LEVEL || 'info'),
@@ -40,11 +40,11 @@ export function getFullErrorStack(ex: any) {
 
 let childLog = rootLogger;
 
-export function overrideRootLogger(logger: bunyan.Logger) {
+export function overrideRootLogger(logger: Logger) {
     rootLogger = logger;
 }
 
-export function logger(): bunyan.Logger {
+export function logger(): Logger {
     return childLog;
 }
 
