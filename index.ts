@@ -4,7 +4,7 @@ import * as Logger from 'bunyan';
 let rootLogger = Logger.createLogger({
     name: process.env.APP_NAME || "app",
     src: !(process.env.BUNYAN_NO_SRC),
-    level: (process.env.BUNYAN_LEVEL || 'info'),
+    level: (process.env.BUNYAN_LEVEL || 'info') as Logger.LogLevelString,
     serializers: {
         err: err => Object.assign({
             message: err.message,
