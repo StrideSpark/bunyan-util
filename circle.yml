@@ -30,3 +30,8 @@ deployment:
     branch: master
     commands:
       - npm run 2npm
+experimental:
+  notify:
+    branches:
+      only:
+        - master
