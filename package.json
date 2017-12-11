@@ -7,14 +7,17 @@
   "author": "stridespark",
   "license": "MIT",
   "dependencies": {
-    "@types/bunyan": "^1.8.0",
-    "bunyan": "^1.8.10"
+    "@types/bunyan": "^1.8.3"
   },
   "scripts": {
     "2npm": "tsc --declaration && publish"
   },
+  "peerDependencies": {
+    "bunyan": "^1.8.10"
+  },
   "devDependencies": {
+    "bunyan": "^1.8.10",
     "publish": "0.6.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.6.2"
   }
 }
